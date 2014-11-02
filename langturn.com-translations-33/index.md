@@ -22,7 +22,7 @@ ogimage: http://sanemat.github.io/archives/langturn.com-translations-33/NO_IMAGE
     - Date: Thursday, December 16th, 2010 at 9:41 pm
 - Translation:
     - URL: [gemspecとGemfileの役割をはっきりさせておく](http://langturn.com/translations/33?locale=ja) (Not Found)
-    - Salvage from [Internet Archive](https://web.archive.org/web/20130402161316/http://langturn.com/translations/33?locale=ja)
+    - Salvaged from [Internet Archive](https://web.archive.org/web/20130402161316/http://langturn.com/translations/33?locale=ja)
 
 ## 要約
 
