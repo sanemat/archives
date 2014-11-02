@@ -23,6 +23,71 @@
   window.analytics.load("FvpAD3BCTG");
   window.analytics.page();
 </script>
+<h1 id="gemspecとgemfileの役割をはっきりさせておく">gemspecとGemfileの役割をはっきりさせておく</h1>
+<ul>
+<li>Original:
+<ul>
+<li>URL: <a href="http://yehudakatz.com/2010/12/16/clarifying-the-roles-of-the-gemspec-and-gemfile/">Clarifying the Roles of the .gemspec and Gemfile</a></li>
+<li>Date: Thursday, December 16th, 2010 at 9:41 pm</li>
+</ul></li>
+<li>Translation:
+<ul>
+<li>URL: <a href="http://langturn.com/translations/33?locale=ja">gemspecとGemfileの役割をはっきりさせておく</a> (Not Found)</li>
+<li>Salvage from <a href="https://web.archive.org/web/20130402161316/http://langturn.com/translations/33?locale=ja">Internet Archive</a></li>
+</ul></li>
+</ul>
+<h2 id="要約">要約</h2>
+<p>Gemfileは依存関係を厳密に指定するのが目的なので、アプリケーションを開発するときはレポジトリにチェックインすべき。 一方Gemを開発するときは依存関係を緩やかに定義し柔軟性を持たせることが重要なポイントなので、Gemfileはレポジトリにチェックインしてはいけない。 他、Gemfileとgemspecをうまく組み合わせて使う方法など。</p>
+<h2 id="短い方の説明">短い方の説明</h2>
+<p>アプリケーションもgemも「依存関係」という同じような概念を持っているように思えるかも知れませんが、この言葉はそれぞれにとって重要な違いがあります。 Gemは他のgemとそのバージョンに依存しますが、それらがどこから来るのかは気にしません。 一方アプリケーションは厳密にデプロイメントを調整する必要があります。</p>
+<p><strong>Gemを開発するときは</strong>、Gemfileには<a href="http://gembundler.com/rubygems.html">gemspec</a>を使って重複を回避しましょう。 普通、GemfileにはRubygemsのソースとgemspecの一行だけが書かれるべきです。 <strong>Gemfile.lockはバージョン管理にチェックインしてはいけません</strong>。 Gemコマンドで扱われないような精密さを要求してしまうからです。 精密さが満たされるとしても、利用者側からすると依存関係のバージョンがズレていると使えないことになってしまって不便です。</p>
+<p><strong>アプリケーションを開発するときは、Gemfile.lockはチェックインすべきです</strong>。 Bundlerによってどの環境でも同じソースの同じGemが使えるのは大変ありがたいからです。</p>
+<p>以前この件について記事を書いて以来、bundlerで使われるGemfileとRubygemsで使われる.gemspecの役割の違いについて色々と質問を受けてきました。 多くの人はこの二つの役目が重複していると感じて、重複を解決するためにまた別のツールを導入したりしてしまっているようです。</p>
+<h2 id="rubyのライブラリ">Rubyのライブラリ</h2>
+<p>Rubyのライブラリはgemという形式にまとめてrubygems.orgにて配布されるのが一般的です。 gemには以下のような有用な情報が含まれます。</p>
+<ul>
+<li>メタデータ。名前、バージョン、説明、著者のメールアドレスなど</li>
+<li>含まれるファイルのリスト。</li>
+<li>実行ファイルとその場所のリスト（binなど）。</li>
+<li>Rubyのload pathに含まれるべきパスのリスト（libなど）。</li>
+<li>必要となるほかのライブラリ（依存関係）</li>
+</ul>
+<p>最後の「依存関係」というのがGemfileと重なるところですね。 Gemが依存関係を記述するときは、名前とバージョン範囲をリストアップします。 個々で重要なのは依存先ライブラリのソースについては気にしないということです。 ということは、依存先のGemとして自分でミラーしたものやハックしたものを使うことができるわけです。 要するにRubygemの依存というのはシンボリックなものであって、インターネットのどの場所にあるどのGem、という厳密な依存ではないのです。</p>
+<p>他の要素と相まって、このことがRubygemsというシステムをロバストなものにしています。</p>
+<p>また、Gemの作者は依存先ライブラリのバージョンを範囲で指定します。 開発時に利用していた依存先が、利用時には別のものになっていることも考慮して作らなければいけません。 特に依存先の依存先についてはよくあることです。</p>
+<h2 id="rubyアプリケーション">Rubyアプリケーション</h2>
+<p>Rubyアプリケーション（Railsアプリなど）は大抵、依存するサードパーティ製コードが複雑かつ精密なものになりがちです。 開発に着手したときにどのバージョンのnokogiriを使ってるかは気にしなくても、開発時とデプロイ時で同じものを使う必要はあります。 Gemの作者と違ってアプリの作者はデプロイ環境を意のままにするので、そのアプリをサードパーティが使うかもということは考えなくてよく、依存関係はとにかく精度の高いものにすることになります。</p>
+<p>結果的に、アプリケーションが使うGemがインターネットのどこに置かれているかまで厳密に指定するわけです。 長期にわたって影響なく使い続けられる事を考えなければいけないGem作者とは対照的な立場です。</p>
+<p>また、アプリの作者は公開されているGemをハックしたり、未公開の&quot;edge&quot;バージョンを使ったりする必要があったりもします。 Bundlerではそのためにgemの場所を特定のgitレポジトリとして指定することも可能です。 Gemの作者は依存関係をシンボリックに定義しているので、アプリの作者は独自のミラー（gitなど）でその依存関係を満たすという選択ができます。</p>
+<p>このように、永続性と柔軟性を重視するGem開発者と、どの環境においても同じ依存先を使うことを重視するアプリ開発者とでは全く必要とするものが違ってくるのです。</p>
+<h2 id="rubygemsとbundler">RubygemsとBundler</h2>
+<p>Rubygemsというライブラリ（そのCLIとAPI）は、Gem作者の要求を満たすよう設計されています。 特にgemspecはrubygems.orgにデプロイするgemの標準的なデータ書式です。 上に述べた理由により、gemspecでは依存先の場所という過渡的な情報は保持しません。</p>
+<p>一方Bundlerはアプリ開発者の要求を満たすよう設計されています。 Gemfileはメタデータ、ファイルリストなどは含みません。 なぜなら依存関係を厳密に定義するという目的から外れるからです。 そのかわり、依存関係については本当に厳密に定義できます。</p>
+<h2 id="git上のgem">Git上の「Gem」</h2>
+<p>アプリケーションはまだリリースされていないようなgemに依存することもあると言いました。 Bundlerではgitレポジトリの中の.gemspecファイルを見て、まるでgemのように扱うことができます。</p>
+<h2 id="gemを開発するときは">Gemを開発するときは</h2>
+<p>Gemを開発していくとこの二つの世界の狭間に陥ることがあります。 理由は</p>
+<ul>
+<li>開発の先端ではrubygems.orgに公開されていないgemを使うことがあるから。 したがってそのgemの正確な場所を指定する必要がある。</li>
+<li>Rubygemsの力だけでは必要なもの全てをload path内に置くことができないから。 たとえばある依存先はローカル、あるgemはどこかのgitレポジトリ、あるgemはrubygems.orgから引っ張ってこなければいけないような状況。 Railsの開発などはこれにあてはまる。</li>
+</ul>
+<p>開発中のgemはいずれ成長して普通のgemとして公開するわけですから、.gemspecを仕様に従って書く必要があります。 Gemfileに書いているだけではいけません。</p>
+<p>Gemの開発においてGemfileとgemspecに同じような内容を書かなくてすむよう、Bundlerにはこういう設定項目があります（<a href="http://gembundler.com/rubygems.html">bundlerのドキュメント</a>）：</p>
+<pre class="sourceCode ruby"><code class="sourceCode ruby">source <span class="st">&quot;http://www.rubygems.org&quot;</span>
+gemspec</code></pre>
+<p>このディレクティブを書くと、Bundlerは近くの.gemspecファイルを探してくれます。 そしてbundleを実行するとそれをGemとみなし、その依存関係を解決してくれます。 load pathにも追加してくるので、記述の重複なしにgemspecとbundlerを使うことができるわけです。</p>
+<p>まだリリースされていないGemを使う必要があるときは（たとえばRailsではRack, Arel, Mailなどのプレリリースをよく使いますが）、Gemfileにそれぞれのgemの場所を書いていきます。 依存の解決のためには.gemspecを見ますが、その取得先についてはGemfileを尊重してくれます。</p>
+<pre class="sourceCode ruby"><code class="sourceCode ruby">source <span class="st">&quot;http://www.rubygems.org&quot;</span>
+gemspec
+<span class="co"># このgitレポジトリにあるrackが.gemspecで指定されたバージョンと</span>
+<span class="co"># ズレていたら、Bundlerがエラーを吐く</span>
+gem <span class="st">&quot;rack&quot;</span>, <span class="st">:git</span> =&gt; <span class="st">&quot;git://github.com/rack/rack.git&quot;</span></code></pre>
+<p>この情報はいずれ.gemspecを公開することを考えると.gemspecには書きたくありません。 繰り返しますが.gemspecではこの情報を指定しないことによって柔軟性を確保し、Gemfileでは（開発時に限って）厳密に指定することができています。</p>
+<p>Gemfile.lockをレポジトリにチェックインするなというのはこういう理由です。 Bundlerによって自動生成されるこのファイルには必要となる全てのgemの厳密な場所が書かれていますが、それによってGemとしての柔軟性が失われるからです。</p>
+<p>.gemspecで指定したどんな依存先でも問題なく使えるという保証にはなりませんが、とにかく、そのバージョンを指定してしまうことによるメリットはありません。</p>
+<h2 id="追記">追記</h2>
+<p>確認ですが、アプリケーションの開発ではGemfile.lockをチェックインすべきです。 このファイルには使用するgemの正確なバージョンと場所が書かれています。 これはアプリケーション開発では望ましいことですが、Gem開発では嬉しくありません。</p>
+<hr />
 <iframe src="http://expando.github.io/add/?u=http%3A%2F%2Fsanemat.github.io%2Farchives%2Flangturn.com-translations-33%2F&amp;t=gemspec%E3%81%A8Gemfile%E3%81%AE%E5%BD%B9%E5%89%B2%E3%82%92%E3%81%AF%E3%81%A3%E3%81%8D%E3%82%8A%E3%81%95%E3%81%9B%E3%81%A6%E3%81%8A%E3%81%8F" frameborder="0" frametransparency="1" scrolling="no" height="30" width="400">
 </iframe>
 </article>
