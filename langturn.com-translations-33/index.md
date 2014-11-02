@@ -26,8 +26,8 @@ ogimage: http://sanemat.github.io/archives/langturn.com-translations-33/NO_IMAGE
 
 ## 要約
 
-~~Gemfile~~Gemfile.lock(修正)は依存関係を厳密に指定するのが目的なので、アプリケーションを開発するときはレポジトリにチェックインすべき。
-一方Gemを開発するときは依存関係を緩やかに定義し柔軟性を持たせることが重要なポイントなので、~~Gemfile~~Gemfile.lock(修正)はレポジトリにチェックインしてはいけない。
+~~Gemfile~~Gemfile.lockは依存関係を厳密に指定するのが目的なので、アプリケーションを開発するときはレポジトリにチェックインすべき。
+一方Gemを開発するときは依存関係を緩やかに定義し柔軟性を持たせることが重要なポイントなので、~~Gemfile~~Gemfile.lockはレポジトリにチェックインしてはいけない。
 他、Gemfileとgemspecをうまく組み合わせて使う方法など。
 
 ## 短い方の説明
