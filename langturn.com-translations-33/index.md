@@ -15,5 +15,5 @@ ogimage: http://sanemat.github.io/archives/langturn.com-translations-33/NO_IMAGE
   window.analytics.page();
 </script>
 
-<iframe src="http://expando.github.io/add/?u=http%3A%2F%2Fsanemat.github.io%2Ftalks%2F20141023-dependency-update-bot%2F&t=Dependency%20Update%20Bot" frameborder=0 frametransparency=1 scrolling=no height=30 width=400>
+<iframe src="http://expando.github.io/add/?u=http%3A%2F%2Fsanemat.github.io%2Farchives%2Flangturn.com-translations-33%2F&t=gemspec%E3%81%A8Gemfile%E3%81%AE%E5%BD%B9%E5%89%B2%E3%82%92%E3%81%AF%E3%81%A3%E3%81%8D%E3%82%8A%E3%81%95%E3%81%9B%E3%81%A6%E3%81%8A%E3%81%8F" frameborder=0 frametransparency=1 scrolling=no height=30 width=400>
 </iframe>
